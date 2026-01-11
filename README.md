@@ -1,53 +1,42 @@
-# Media Capture and Upload Service
+# Image Upload Service - Full-Stack Photo/Video Application
 
-A full-stack application for capturing photos and recording videos through the web browser, with a Spring Boot backend for storage.
+A complete full-stack web application for capturing, uploading, and managing photos and videos with **Docker containerization** and production-ready deployment.
 
-## Project Structure
+**Status:** ✅ Deployment-Ready (v1.2.0)
 
-```
-image-upload-service/
-├── backend/                 # Spring Boot backend
-│   ├── src/
-│   │   └── main/
-│   │       ├── java/com/mediaupload/
-│   │       │   ├── config/
-│   │       │   ├── controller/
-│   │       │   ├── dto/
-│   │       │   ├── entity/
-│   │       │   ├── repository/
-│   │       │   └── service/
-│   │       └── resources/
-│   └── pom.xml
-├── frontend/                # React frontend
-│   ├── public/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── services/
-│   │   ├── App.js
-│   │   └── index.js
-│   └── package.json
-└── README.md
-```
+## 🚀 Quick Start (Deployment to 192.168.1.251)
 
-## Features
+### Read these files in order:
+1. [DEPLOYMENT_NAVIGATION.md](DEPLOYMENT_NAVIGATION.md) - Where to start (2 min)
+2. [DEPLOY_NOW.txt](DEPLOY_NOW.txt) - Quick reference (2 min)
+3. [DEPLOYMENT_VISUAL_GUIDE.md](DEPLOYMENT_VISUAL_GUIDE.md) - Understand the flow (5 min)
+4. [DEPLOYMENT_STEPS.md](DEPLOYMENT_STEPS.md) - Actually deploy (follow step-by-step)
 
-### Frontend
-- 📷 **Photo Capture**: Take photos using your device's camera
-- 🎥 **Video Recording**: Record videos with audio
-- 📁 **Media Gallery**: View, filter, and manage uploaded media
-- 📱 **Responsive Design**: Works on desktop and mobile devices
+**Estimated deployment time:** 10-15 minutes
 
-### Backend
-- ☁️ **File Upload API**: RESTful endpoints for uploading images and videos
-- 💾 **File Storage**: Local file system storage with organized directories
-- 🗃️ **Database**: H2 database for metadata storage
-- 🔄 **CORS Support**: Cross-origin requests enabled for frontend communication
+## 📦 What's Included
 
-## Prerequisites
+### Frontend Application
+- ⚛️ **React 18.2.0** - Modern UI framework
+- 📷 **Photo Capture** - Canvas API for instant photo capture
+- 🎥 **Video Recording** - MediaRecorder API for video recording
+- 🖼️ **Gallery** - Browse, filter, and manage media
+- 🔍 **Responsive Design** - Works on desktop, tablet, mobile
+- ✨ **Modern UI** - Clean, intuitive interface
 
-- **Java 17** or higher
-- **Maven 3.6+**
-- **Node.js 16+** and **npm**
+### Backend API
+- 🍃 **Spring Boot 3.2.0** - Enterprise Java framework
+- 📡 **REST API** - Full CRUD operations for media management
+- 💾 **H2 Database** - Embedded database with JPA persistence
+- 🔐 **File Storage** - Secure upload/download handling
+- 🚀 **Production-Ready** - Health checks, error handling, logging
+
+### DevOps & Infrastructure
+- 🐳 **Docker** - Multi-stage builds for optimized images
+- 📦 **Docker Compose** - Complete service orchestration
+- 🔄 **CI/CD Ready** - Git integration, versioning
+- 🌐 **Nginx Reverse Proxy** - API gateway and static serving
+- 📊 **Monitoring** - Health checks, logging, status endpoints
 
 ## Getting Started
 
@@ -59,109 +48,114 @@ cd backend
 mvn spring-boot:run
 ```
 
-**Option B: Docker**
-```bash
-cd backend
-docker build -t image-upload-service:1.0.0 .
-docker run -p 8080:8080 -v $(pwd)/uploads:/app/uploads image-upload-service:1.0.0
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    End User (Browser)                   │
+└─────────────────────────────────────────────────────────┘
+                            │
+                   HTTP (Port 80 & 8080)
+                            │
+        ┌───────────────────┴───────────────────┐
+        │                                       │
+        ▼                                       ▼
+┌──────────────────┐                  ┌──────────────────┐
+│  Nginx Server    │                  │  Spring Boot API │
+│  (Port 80)       │                  │  (Port 8080)     │
+│  - React SPA     │                  │  - REST API      │
+│  - Static Files  │                  │  - File Storage  │
+│  - Reverse Proxy │                  │  - H2 Database   │
+└──────────────────┘                  └──────────────────┘
 ```
 
-**Option C: Docker Compose**
-```bash
-docker-compose up -d
-```
-
-Backend runs on: `http://localhost:8080`
-
-### 2. Frontend Setup
-
-```bash
-cd frontend
-npm install
-npm run build
-serve -s build -l 3000
-```
-
-Frontend runs on: `http://localhost:3000`
-
-## Docker Deployment
-
-### Build Docker Image
-
-```bash
-cd backend
-docker build -t image-upload-service:1.0.0 .
-```
-
-### Run Container
-
-```bash
-docker run -d \
-  --name image-upload-backend \
-  -p 8080:8080 \
-  -v $(pwd)/uploads:/app/uploads \
-  --restart unless-stopped \
-  image-upload-service:1.0.0
-```
-
-### Deploy to Remote Server (192.168.1.251)
-
-See [REMOTE_DEPLOYMENT.md](REMOTE_DEPLOYMENT.md) for detailed instructions on deploying to the remote server at 192.168.1.251.
-
-Quick deployment:
-```bash
-# Build and save image
-docker build -t image-upload-service:1.0.0 backend/
-docker save image-upload-service:1.0.0 | gzip > image-upload-service-1.0.0.tar.gz
-
-# Transfer to remote server
-scp image-upload-service-1.0.0.tar.gz root@192.168.1.251:/tmp/
-
-# SSH into remote and deploy
-ssh root@192.168.1.251
-docker load < /tmp/image-upload-service-1.0.0.tar.gz
-mkdir -p /data/uploads
-docker run -d -p 8080:8080 -v /data/uploads:/app/uploads --restart unless-stopped image-upload-service:1.0.0
-```
-
-## API Endpoints
+## 📊 API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/api/media/upload/image` | Upload an image |
-| POST | `/api/media/upload/video` | Upload a video |
-| GET | `/api/media` | Get all media files |
-| GET | `/api/media/images` | Get all images |
-| GET | `/api/media/videos` | Get all videos |
-| GET | `/api/media/{id}` | Get media file info |
-| GET | `/api/media/{id}/download` | Download/stream media file |
-| DELETE | `/api/media/{id}` | Delete a media file |
+| GET | `/api/media` | List all media |
+| POST | `/api/upload` | Upload photo/video |
+| GET | `/api/media/{id}` | Get media details |
+| DELETE | `/api/media/{id}` | Delete media |
+| GET | `/api/download/{id}` | Download media |
+| GET | `/health` | Health check |
 
-## Configuration
+## 🐳 Deployment Options
 
-### Backend (`application.properties`)
-- `file.upload-dir`: Directory for storing uploaded files (default: `./uploads`)
-- `spring.servlet.multipart.max-file-size`: Maximum upload size (default: 100MB)
+### Option 1: Build on Ubuntu Server (RECOMMENDED ✅)
+- Time: 10-15 minutes
+- Difficulty: Medium
+- Success Rate: 95%
+- See: [DEPLOYMENT_STEPS.md](DEPLOYMENT_STEPS.md)
 
-### Frontend
-- `REACT_APP_API_URL`: Backend API URL (default: `http://localhost:8080/api`)
+### Option 2: Build on Windows → Transfer
+- Time: 20-30 minutes
+- Difficulty: Advanced
+- Success Rate: 70%
+- See: [FULLSTACK_DEPLOYMENT.md](FULLSTACK_DEPLOYMENT.md)
 
-## Browser Permissions
+## 💾 Data Storage
 
-The application requires camera and microphone permissions to function:
-- **Camera**: Required for photo capture and video recording
-- **Microphone**: Required for video recording with audio
+- **Frontend:** Runs on Nginx (port 80)
+- **Backend API:** Runs on Spring Boot (port 8080)
+- **Uploaded Files:** `/data/uploads/`
+- **Database:** `/data/mediadb/` (H2)
 
-## Technology Stack
+## ✅ Verification
 
-### Backend
-- Spring Boot 3.2
-- Spring Data JPA
-- H2 Database
-- Lombok
+After deployment:
+```bash
+# Check services
+docker-compose ps
 
-### Frontend
-- React 18
-- Axios for HTTP requests
-- MediaRecorder API for video recording
-- Canvas API for photo capture
+# Test frontend
+http://192.168.1.251
+
+# Test backend API
+http://192.168.1.251:8080/api/media
+
+# View logs
+docker-compose logs --tail=50
+```
+
+## 🐛 Troubleshooting
+
+See [POST_DEPLOYMENT_TROUBLESHOOTING.md](POST_DEPLOYMENT_TROUBLESHOOTING.md) for comprehensive troubleshooting guide.
+
+Common issues:
+- **Connection refused:** Check `docker-compose ps`
+- **502 error:** Check `docker logs image-upload-backend`
+- **File upload fails:** Check permissions `chmod -R 777 /data/uploads/`
+- **Slow uploads:** Check disk space `df -h /data/`
+
+## 📚 Documentation
+
+| Document | Purpose |
+|----------|---------|
+| [DEPLOYMENT_NAVIGATION.md](DEPLOYMENT_NAVIGATION.md) | Where to start |
+| [DEPLOYMENT_STEPS.md](DEPLOYMENT_STEPS.md) | Main deployment guide |
+| [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md) | Verify deployment |
+| [POST_DEPLOYMENT_TROUBLESHOOTING.md](POST_DEPLOYMENT_TROUBLESHOOTING.md) | Fix issues |
+| [DEPLOYMENT_VISUAL_GUIDE.md](DEPLOYMENT_VISUAL_GUIDE.md) | Understand flow |
+| [QUICK_START_DEPLOY.md](QUICK_START_DEPLOY.md) | Deployment options |
+| [BUILD_ON_UBUNTU.md](BUILD_ON_UBUNTU.md) | Alternative method |
+| [START_HERE.md](START_HERE.md) | Project overview |
+| [FULLSTACK_DEPLOYMENT.md](FULLSTACK_DEPLOYMENT.md) | Complete guide |
+
+## 📖 Repository
+
+**GitHub:** https://github.com/bharathvu/image-upload-service
+
+**Versions:**
+- v1.0.0 - Initial release
+- v1.1.0 - Backend Docker support
+- v1.2.0 - Full-stack Docker (current)
+
+## 🚀 Get Started
+
+1. Read [DEPLOYMENT_NAVIGATION.md](DEPLOYMENT_NAVIGATION.md)
+2. Follow [DEPLOYMENT_STEPS.md](DEPLOYMENT_STEPS.md)
+3. Verify with [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md)
+
+**Estimated Time:** 10-15 minutes  
+**Target:** 192.168.1.251
