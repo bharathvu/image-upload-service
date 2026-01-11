@@ -51,24 +51,78 @@ image-upload-service/
 
 ## Getting Started
 
-### 1. Start the Backend Server
+### 1. Backend Setup
 
+**Option A: Maven**
 ```bash
 cd backend
 mvn spring-boot:run
 ```
 
-The backend will start on `http://localhost:8080`
+**Option B: Docker**
+```bash
+cd backend
+docker build -t image-upload-service:1.0.0 .
+docker run -p 8080:8080 -v $(pwd)/uploads:/app/uploads image-upload-service:1.0.0
+```
 
-### 2. Start the Frontend Development Server
+**Option C: Docker Compose**
+```bash
+docker-compose up -d
+```
+
+Backend runs on: `http://localhost:8080`
+
+### 2. Frontend Setup
 
 ```bash
 cd frontend
 npm install
-npm start
+npm run build
+serve -s build -l 3000
 ```
 
-The frontend will start on `http://localhost:3000`
+Frontend runs on: `http://localhost:3000`
+
+## Docker Deployment
+
+### Build Docker Image
+
+```bash
+cd backend
+docker build -t image-upload-service:1.0.0 .
+```
+
+### Run Container
+
+```bash
+docker run -d \
+  --name image-upload-backend \
+  -p 8080:8080 \
+  -v $(pwd)/uploads:/app/uploads \
+  --restart unless-stopped \
+  image-upload-service:1.0.0
+```
+
+### Deploy to Remote Server (192.168.1.251)
+
+See [REMOTE_DEPLOYMENT.md](REMOTE_DEPLOYMENT.md) for detailed instructions on deploying to the remote server at 192.168.1.251.
+
+Quick deployment:
+```bash
+# Build and save image
+docker build -t image-upload-service:1.0.0 backend/
+docker save image-upload-service:1.0.0 | gzip > image-upload-service-1.0.0.tar.gz
+
+# Transfer to remote server
+scp image-upload-service-1.0.0.tar.gz root@192.168.1.251:/tmp/
+
+# SSH into remote and deploy
+ssh root@192.168.1.251
+docker load < /tmp/image-upload-service-1.0.0.tar.gz
+mkdir -p /data/uploads
+docker run -d -p 8080:8080 -v /data/uploads:/app/uploads --restart unless-stopped image-upload-service:1.0.0
+```
 
 ## API Endpoints
 

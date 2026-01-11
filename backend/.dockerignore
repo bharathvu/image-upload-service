@@ -1,0 +1,35 @@
+# Docker ignore patterns
+.git
+.gitignore
+.DS_Store
+*.iml
+.idea
+.vscode
+*.swp
+*.swo
+
+# Maven
+target/
+.m2
+maven-status/
+
+# Build artifacts
+*.jar
+*.war
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Node modules and npm cache
+node_modules/
+npm-debug.log
+package-lock.json
+
+# Environment files
+.env
+.env.local
+
+# IDE
+.editorconfig

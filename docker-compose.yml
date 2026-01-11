@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  image-upload-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - JAVA_OPTS=-Xmx512m -Xms256m
+      - file.upload-dir=/app/uploads
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/data:/app/data
+    networks:
+      - app-network
+    restart: unless-stopped
+    container_name: image-upload-backend
+
+networks:
+  app-network:
+    driver: bridge
