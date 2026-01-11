@@ -1,6 +1,19 @@
 version: '3.8'
 
 services:
+  image-upload-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - image-upload-backend
+    networks:
+      - app-network
+    restart: unless-stopped
+    container_name: image-upload-frontend
+
   image-upload-backend:
     build:
       context: ./backend
