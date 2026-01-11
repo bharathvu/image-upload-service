@@ -1,0 +1,72 @@
+╔════════════════════════════════════════════════════════════╗
+║     IMAGE UPLOAD SERVICE - DEPLOYMENT TO 192.168.1.251     ║
+╚════════════════════════════════════════════════════════════╝
+
+🎯 READY TO DEPLOY - Follow these steps:
+
+STEP 1: SSH INTO UBUNTU SERVER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Command: ssh root@192.168.1.251
+  Then enter your password
+
+STEP 2: PREPARE DIRECTORIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  mkdir -p /root/app /data/uploads /data/mediadb
+  chmod -R 755 /data
+
+STEP 3: CLONE REPOSITORY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  cd /root/app
+  git clone https://github.com/bharathvu/image-upload-service.git .
+
+STEP 4: BUILD BACKEND (3-5 minutes)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  docker build -t image-upload-service:1.0.0 backend/
+
+STEP 5: BUILD FRONTEND (1-3 minutes)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  docker build -t image-upload-frontend:1.0.0 frontend/
+
+STEP 6: DEPLOY WITH DOCKER COMPOSE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  docker-compose up -d
+
+STEP 7: VERIFY DEPLOYMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  docker-compose ps
+  ✅ Both containers should show "UP"
+
+STEP 8: TEST THE APPLICATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  From browser:
+  
+  Frontend:  http://192.168.1.251
+  API:       http://192.168.1.251:8080/api/media
+  Health:    http://192.168.1.251/health.html
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏱️  TOTAL TIME: 10-15 minutes
+
+📍 SERVICES AFTER DEPLOYMENT:
+   ✅ Frontend: http://192.168.1.251
+   ✅ Backend API: http://192.168.1.251:8080/api
+   ✅ Health Check: http://192.168.1.251/health.html
+
+📚 DETAILED GUIDES:
+   → DEPLOYMENT_STEPS.md (Step-by-step)
+   → DEPLOYMENT_CHECKLIST.md (Verification)
+   → QUICK_START_DEPLOY.md (Overview)
+
+🐛 TROUBLESHOOTING:
+   docker-compose logs      (View logs)
+   docker-compose ps        (Check status)
+   docker-compose restart   (Restart services)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Ready to start? 👉 Follow DEPLOYMENT_STEPS.md
+
+Version: v1.2.0
+Status: ✅ Production Ready
+Target: 192.168.1.251
